@@ -187,7 +187,7 @@
     <value>Più riquadri</value>
   </data>
   <data name="TabCloseSubMenu" xml:space="preserve">
-    <value>Chiudi...</value>
+    <value>Chiudi</value>
   </data>
   <data name="TabCloseAfter" xml:space="preserve">
     <value>Chiudi schede a destra</value>
@@ -199,10 +199,7 @@
     <value>Chiudi scheda</value>
   </data>
   <data name="PaneClose" xml:space="preserve">
-    <value>Chiudi riquadro</value>
-  </data>
-  <data name="SplitTabText" xml:space="preserve">
-    <value>Dividi scheda</value>
+    <value>Chiudi il riquadro</value>
   </data>
   <data name="SplitPaneText" xml:space="preserve">
     <value>Suddividi riquadro</value>
@@ -210,17 +207,11 @@
   <data name="SearchWebText" xml:space="preserve">
     <value>Ricerca nel Web</value>
   </data>
-  <data name="TabColorChoose" xml:space="preserve">
-    <value>Colore...</value>
-  </data>
   <data name="TabColorCustomButton.Content" xml:space="preserve">
-    <value>Personalizzato...</value>
+    <value>Personalizzato</value>
   </data>
   <data name="TabColorClearButton.Content" xml:space="preserve">
     <value>Reimposta</value>
-  </data>
-  <data name="RenameTabText" xml:space="preserve">
-    <value>Rinomina scheda</value>
   </data>
   <data name="DuplicateTabText" xml:space="preserve">
     <value>Duplica scheda</value>
@@ -464,7 +455,7 @@
     <comment>This is the heading for a version number label</comment>
   </data>
   <data name="AboutDialog_GettingStartedLink.Content" xml:space="preserve">
-    <value>Attività iniziali</value>
+    <value>Introduzione</value>
     <comment>A hyperlink name for a guide on how to get started using Terminal</comment>
   </data>
   <data name="AboutDialog_SourceCodeLink.Content" xml:space="preserve">
@@ -482,10 +473,6 @@
   <data name="AboutDialog_PrivacyPolicyLink.Content" xml:space="preserve">
     <value>Informativa sulla privacy</value>
     <comment>A hyperlink name for the Terminal's privacy policy</comment>
-  </data>
-  <data name="AboutDialog_ThirdPartyNoticesLink.Content" xml:space="preserve">
-    <value>Informative di terze parti</value>
-    <comment>A hyperlink name for the Terminal's third-party notices</comment>
   </data>
   <data name="QuitDialog.CloseButtonText" xml:space="preserve">
     <value>Annulla</value>
@@ -569,12 +556,6 @@
   </data>
   <data name="CommandPalette_FailedParsingCommandLine" xml:space="preserve">
     <value>Analisi della riga di comando non riuscita:</value>
-  </data>
-  <data name="CommandPaletteControlName" xml:space="preserve">
-    <value>Riquadro comandi</value>
-  </data>
-  <data name="TabSwitcherControlName" xml:space="preserve">
-    <value>Selezione scheda</value>
   </data>
   <data name="TabSwitcher_SearchBoxText" xml:space="preserve">
     <value>Inserire un nome scheda...</value>
@@ -723,10 +704,7 @@
     <value>Ingrandisci</value>
   </data>
   <data name="WindowRestoreDownButtonToolTip" xml:space="preserve">
-    <value>Ripristina visualizzazione normale</value>
-  </data>
-  <data name="CommandPaletteMenuItem" xml:space="preserve">
-    <value>Riquadro comandi</value>
+    <value>Ripristina in basso</value>
   </data>
   <data name="NotificationIconFocusTerminal" xml:space="preserve">
     <value>Terminale ottimizzato</value>
@@ -765,9 +743,6 @@
   </data>
   <data name="InfoBarDismissButton.Content" xml:space="preserve">
     <value>Non mostrare più questo messaggio</value>
-  </data>
-  <data name="ElevationShield.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Questa finestra del terminale è in esecuzione come amministratore</value>
   </data>
   <data name="CommandPalette_MatchesAvailable" xml:space="preserve">
     <value>Suggerimenti trovati: {0}</value>
@@ -830,7 +805,7 @@
     <value>Vuoto</value>
   </data>
   <data name="ClosePaneText" xml:space="preserve">
-    <value>Chiudi riquadro</value>
+    <value>Chiudi il riquadro</value>
   </data>
   <data name="ClosePaneToolTip" xml:space="preserve">
     <value>Chiude il riquadro attivo se sono presenti più riquadri</value>
@@ -838,9 +813,6 @@
   <data name="TabColorClearButton.[using:Windows.UI.Xaml.Automation]AutomationProperties.FullDescription" xml:space="preserve">
     <value>Reimposta il colore della scheda</value>
     <comment>Text used to identify the reset button</comment>
-  </data>
-  <data name="MoveTabToNewWindowText" xml:space="preserve">
-    <value>Sposta scheda in una nuova finestra</value>
   </data>
   <data name="MoveTabToNewWindowToolTip" xml:space="preserve">
     <value>Sposta scheda in una nuova finestra </value>

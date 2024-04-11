@@ -187,7 +187,7 @@
     <value>多个窗格</value>
   </data>
   <data name="TabCloseSubMenu" xml:space="preserve">
-    <value>关闭…</value>
+    <value>关闭</value>
   </data>
   <data name="TabCloseAfter" xml:space="preserve">
     <value>关闭右侧标签页</value>
@@ -201,29 +201,20 @@
   <data name="PaneClose" xml:space="preserve">
     <value>关闭窗格</value>
   </data>
-  <data name="SplitTabText" xml:space="preserve">
-    <value>拆分选项卡</value>
-  </data>
   <data name="SplitPaneText" xml:space="preserve">
     <value>拆分窗格</value>
   </data>
   <data name="SearchWebText" xml:space="preserve">
-    <value>Web 搜索</value>
-  </data>
-  <data name="TabColorChoose" xml:space="preserve">
-    <value>颜色...</value>
+    <value>网络搜索</value>
   </data>
   <data name="TabColorCustomButton.Content" xml:space="preserve">
-    <value>自定义...</value>
+    <value>自定义</value>
   </data>
   <data name="TabColorClearButton.Content" xml:space="preserve">
     <value>重置</value>
   </data>
-  <data name="RenameTabText" xml:space="preserve">
-    <value>重命名选项卡</value>
-  </data>
   <data name="DuplicateTabText" xml:space="preserve">
-    <value>复制选项卡</value>
+    <value>复制标签页</value>
   </data>
   <data name="InvalidBackgroundImage" xml:space="preserve">
     <value>找到一个具有无效 "backgroundImage" 的配置文件。将该配置文件设置为默认设置为不包含背景图像。请确保在设置 "backgroundImage" 时，该值是指向图像的有效文件路径。</value>
@@ -480,12 +471,8 @@
     <comment>A hyperlink name for the Terminal's release notes</comment>
   </data>
   <data name="AboutDialog_PrivacyPolicyLink.Content" xml:space="preserve">
-    <value>隐私策略</value>
+    <value>隐私政策</value>
     <comment>A hyperlink name for the Terminal's privacy policy</comment>
-  </data>
-  <data name="AboutDialog_ThirdPartyNoticesLink.Content" xml:space="preserve">
-    <value>第三方通知</value>
-    <comment>A hyperlink name for the Terminal's third-party notices</comment>
   </data>
   <data name="QuitDialog.CloseButtonText" xml:space="preserve">
     <value>取消</value>
@@ -569,12 +556,6 @@
   </data>
   <data name="CommandPalette_FailedParsingCommandLine" xml:space="preserve">
     <value>分析命令行失败：</value>
-  </data>
-  <data name="CommandPaletteControlName" xml:space="preserve">
-    <value>命令面板</value>
-  </data>
-  <data name="TabSwitcherControlName" xml:space="preserve">
-    <value>选项卡切换器</value>
   </data>
   <data name="TabSwitcher_SearchBoxText" xml:space="preserve">
     <value>键入选项卡名称...</value>
@@ -725,9 +706,6 @@
   <data name="WindowRestoreDownButtonToolTip" xml:space="preserve">
     <value>向下还原</value>
   </data>
-  <data name="CommandPaletteMenuItem" xml:space="preserve">
-    <value>命令面板</value>
-  </data>
   <data name="NotificationIconFocusTerminal" xml:space="preserve">
     <value>焦点终端</value>
     <comment>This is displayed as a label for the context menu item that focuses the terminal.</comment>
@@ -765,9 +743,6 @@
   </data>
   <data name="InfoBarDismissButton.Content" xml:space="preserve">
     <value>不再显示</value>
-  </data>
-  <data name="ElevationShield.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>此终端窗口正在以管理员身份运行</value>
   </data>
   <data name="CommandPalette_MatchesAvailable" xml:space="preserve">
     <value>找到的建议: {0}</value>
@@ -827,7 +802,7 @@
     <value>关闭此选项卡</value>
   </data>
   <data name="NewTabMenuFolderEmpty" xml:space="preserve">
-    <value>空白...</value>
+    <value>空</value>
   </data>
   <data name="ClosePaneText" xml:space="preserve">
     <value>关闭窗格</value>
