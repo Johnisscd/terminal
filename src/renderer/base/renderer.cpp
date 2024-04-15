@@ -56,6 +56,11 @@ Renderer::~Renderer()
     _pThread.reset();
 }
 
+IRenderData* Renderer::GetRenderData() const noexcept
+{
+    return _pData;
+}
+
 // Routine Description:
 // - Walks through the console data structures to compose a new frame based on the data that has changed since last call and outputs it to the connected rendering engine.
 // Arguments:
@@ -137,6 +142,24 @@ Renderer::~Renderer()
 
         _currentCursorOptions = _GetCursorInfo();
 
+        // Invalidate the line that the active TSF composition is on, so that _PaintBufferOutput() actually gets a chance to draw it.
+        if (!_pData->activeComposition->text.empty())
+        {
+            const auto viewport = _pData->GetViewport();
+            const auto coordCursor = _pData->GetCursorPosition();
+
+            til::rect line{ 0, coordCursor.y, til::CoordTypeMax, coordCursor.y + 1 };
+            if (viewport.TrimToViewport(&line))
+            {
+                viewport.ConvertToOrigin(&line);
+
+                FOREACH_ENGINE(pEngine)
+                {
+                    LOG_IF_FAILED(pEngine->Invalidate(&line));
+                }
+            }
+        }
+
         FOREACH_ENGINE(pEngine)
         {
             RETURN_IF_FAILED(_PaintFrameForEngine(pEngine));
@@ -194,9 +217,6 @@ try
 
     // 2. Paint Rows of Text
     _PaintBufferOutput(pEngine);
-
-    // 3. Paint overlays that reside above the text buffer
-    _PaintOverlays(pEngine);
 
     // 4. Paint Selection
     _PaintSelection(pEngine);
@@ -692,6 +712,7 @@ void Renderer::_PaintBufferOutput(_In_ IRenderEngine* const pEngine)
     // It can move left/right or top/bottom depending on how the viewport is scrolled
     // relative to the entire buffer.
     const auto view = _pData->GetViewport();
+    const auto coordCursor = _pData->GetCursorPosition();
 
     // This is effectively the number of cells on the visible screen that need to be redrawn.
     // The origin is always 0, 0 because it represents the screen itself, not the underlying buffer.
@@ -722,14 +743,65 @@ void Renderer::_PaintBufferOutput(_In_ IRenderEngine* const pEngine)
         const auto redraw = Viewport::Intersect(dirty, view);
 
         // Retrieve the text buffer so we can read information out of it.
-        const auto& buffer = _pData->GetTextBuffer();
+        auto& buffer = _pData->GetTextBuffer();
 
         // Now walk through each row of text that we need to redraw.
         for (auto row = redraw.Top(); row < redraw.BottomExclusive(); row++)
         {
+            const auto rowHasComposition = row == coordCursor.y && !_pData->activeComposition->text.empty();
+
             // Calculate the boundaries of a single line. This is from the left to right edge of the dirty
             // area in width and exactly 1 tall.
             const auto screenLine = til::inclusive_rect{ redraw.Left(), row, redraw.RightInclusive(), row };
+            const auto& r = buffer.GetRowByOffset(row);
+
+            // Draw the active composition.
+            // We have to use some tricks here with const_cast, because the code after it relies on TextBufferCellIterator,
+            // which isn't compatible with the scratchpad row. This forces us to back up and modify the actual row `r`.
+            ROW* rowBackup = nullptr;
+            if (rowHasComposition)
+            {
+                auto& scratch = buffer.GetScratchpadRow();
+
+                std::wstring_view text{ _pData->activeComposition->text };
+                RowWriteState state{
+                    .text = text,
+                    .columnLimit = r.GetReadableColumnCount(),
+                };
+
+                // Measure the width in columns of our `text`.
+                scratch.ReplaceText(state);
+
+                // Ideally the text is inserted at the position of the cursor (`coordCursor`),
+                // but if we got more text than fits into the remaining space until the end of the line,
+                // then we'll insert the text aligned to the end of the line.
+                const auto remaining = state.columnLimit - state.columnEnd;
+                const auto beg = std::clamp(coordCursor.x, 0, remaining);
+
+                scratch.CopyFrom(r);
+                rowBackup = &scratch;
+
+                state.columnEnd = beg;
+
+                size_t x1 = 0;
+                for (const auto& range : _pData->activeComposition->attributes)
+                {
+                    const auto x2 = x1 + range.len;
+
+                    state.text = text.substr(x1, x2);
+                    state.columnBegin = state.columnEnd;
+                    const_cast<ROW&>(r).ReplaceText(state);
+                    const_cast<ROW&>(r).ReplaceAttributes(state.columnBegin, state.columnEnd, range.attr);
+
+                    x1 = x2;
+                }
+            }
+            const auto restore = wil::scope_exit([&] {
+                if (rowBackup)
+                {
+                    const_cast<ROW&>(r).CopyFrom(*rowBackup);
+                }
+            });
 
             // Convert the screen coordinates of the line to an equivalent
             // range of buffer cells, taking line rendition into account.
@@ -1131,70 +1203,6 @@ void Renderer::_PaintCursor(_In_ IRenderEngine* const pEngine)
     RenderFrameInfo info;
     info.cursorInfo = _currentCursorOptions;
     return pEngine->PrepareRenderInfo(info);
-}
-
-// Routine Description:
-// - Paint helper to draw text that overlays the main buffer to provide user interactivity regions
-// - This supports IME composition.
-// Arguments:
-// - engine - The render engine that we're targeting.
-// - overlay - The overlay to draw.
-// Return Value:
-// - <none>
-void Renderer::_PaintOverlay(IRenderEngine& engine,
-                             const RenderOverlay& overlay)
-{
-    try
-    {
-        // Now get the overlay's viewport and adjust it to where it is supposed to be relative to the window.
-        auto srCaView = overlay.region.ToExclusive();
-        srCaView.top += overlay.origin.y;
-        srCaView.bottom += overlay.origin.y;
-        srCaView.left += overlay.origin.x;
-        srCaView.right += overlay.origin.x;
-
-        std::span<const til::rect> dirtyAreas;
-        LOG_IF_FAILED(engine.GetDirtyArea(dirtyAreas));
-
-        for (const auto& rect : dirtyAreas)
-        {
-            if (const auto viewDirty = rect & srCaView)
-            {
-                for (auto iRow = viewDirty.top; iRow < viewDirty.bottom; iRow++)
-                {
-                    const til::point target{ viewDirty.left, iRow };
-                    const auto source = target - overlay.origin;
-
-                    auto it = overlay.buffer.GetCellLineDataAt(source);
-
-                    _PaintBufferOutputHelper(&engine, it, target, false);
-                }
-            }
-        }
-    }
-    CATCH_LOG();
-}
-
-// Routine Description:
-// - Paint helper to draw the composition string portion of the IME.
-// - This specifically is the string that appears at the cursor on the input line showing what the user is currently typing.
-// - See also: Generic Paint IME helper method.
-// Arguments:
-// - <none>
-// Return Value:
-// - <none>
-void Renderer::_PaintOverlays(_In_ IRenderEngine* const pEngine)
-{
-    try
-    {
-        const auto overlays = _pData->GetOverlays();
-
-        for (const auto& overlay : overlays)
-        {
-            _PaintOverlay(*pEngine, overlay);
-        }
-    }
-    CATCH_LOG();
 }
 
 // Routine Description:

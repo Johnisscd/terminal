@@ -44,6 +44,8 @@ namespace Microsoft::Console::Render
 
         ~Renderer();
 
+        IRenderData* GetRenderData() const noexcept;
+
         [[nodiscard]] HRESULT PaintFrame();
 
         void NotifyPaintFrame() noexcept;
@@ -105,8 +107,6 @@ namespace Microsoft::Console::Render
         bool _isHoveredHyperlink(const TextAttribute& textAttribute) const noexcept;
         void _PaintSelection(_In_ IRenderEngine* const pEngine);
         void _PaintCursor(_In_ IRenderEngine* const pEngine);
-        void _PaintOverlays(_In_ IRenderEngine* const pEngine);
-        void _PaintOverlay(IRenderEngine& engine, const RenderOverlay& overlay);
         [[nodiscard]] HRESULT _UpdateDrawingBrushes(_In_ IRenderEngine* const pEngine, const TextAttribute attr, const bool usingSoftFont, const bool isSettingDefaultBrushes);
         [[nodiscard]] HRESULT _PerformScrolling(_In_ IRenderEngine* const pEngine);
         std::vector<til::rect> _GetSelectionRects() const;
